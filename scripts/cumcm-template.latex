@@ -1,0 +1,39 @@
+% 国赛(cumcmthesis) Pandoc 模板
+% 用法：pandoc 论文.md -o 论文.tex --template=cumcm-template.latex --no-highlight
+% 然后 xelatex 论文.tex 跑两遍
+% 论文.md 顶部需有 YAML front-matter：title / tihao / zubie / baominghao
+\documentclass[withoutpreface]{cumcmthesis}
+$if(title)$\title{$title$}$endif$
+$if(tihao)$\newcommand{\papertihao}{$tihao$}$else$\newcommand{\papertihao}{}$endif$
+$if(zubie)$\newcommand{\paperzubie}{$zubie$}$else$\newcommand{\paperzubie}{}$endif$
+$if(baominghao)$\newcommand{\paperbaoming}{$baominghao$}$else$\newcommand{\paperbaoming}{}$endif$
+\usepackage{ulem}
+% 浮动体固定：所有图片按源文件出现顺序"就地"排版，杜绝漂移到任意页/页底溢出；
+% 表格使用 longtable（不浮动、跨页自然断），故此处仅固定 figure。
+\usepackage{float}
+\floatplacement{figure}{H}
+% pandoc 3.x 图片包装命令（模板必须定义，否则 xelatex 遇图即崩）
+\newcommand{\pandocbounded}[1]{#1}
+% pandoc 对 markdown 列表（itemize/enumerate）自动插入 \tightlist，模板须定义
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+% 图片默认缩放至正文宽度，避免大图溢出页边
+\setkeys{Gin}{width=\linewidth,height=0.9\textheight,keepaspectratio}
+% 章节用中文序号(一、二、三)，不自动编号
+\setcounter{secnumdepth}{-\maxdimen}
+\setcounter{tocdepth}{2}
+$for(header-includes)$
+$header-includes$
+$endfor$
+\begin{document}
+% ===== 首页题号条（不显校名/队员名，符合脱敏要求）=====
+{\zihao{4}\noindent 我们参赛选择的题号（从A/B/C中选择一项填写）：\uline{\hspace{1em}\papertihao\hfill}\par}
+\vspace{0.4em}
+{\zihao{4}\noindent 参赛组别（研究生 / 本科生 / 专科生）：\uline{\hspace{1em}\paperzubie\hfill}\par}
+\vspace{0.4em}
+{\zihao{4}\noindent 报名号：\uline{\hspace{1em}\paperbaoming\hfill}\par}
+\vspace{1.5em}
+\begin{center}{\zihao{3}\bfseries\songti $if(title)$$title$$else$题目$endif$}\end{center}
+\vspace{1em}
+$body$
+\end{document}
